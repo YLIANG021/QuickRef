@@ -1,6 +1,6 @@
-"""Core helpers for YL CameraRef."""
+"""Core helpers for QuickRef."""
 
-from .camera import (
+from .reference_state import (
     apply_alpha_to_scene_cameras,
     get_active_camera_bg,
     get_camera_and_settings,

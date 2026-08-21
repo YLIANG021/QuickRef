@@ -4,7 +4,7 @@ import bpy
 
 
 def sync_all_scene_cameras():
-    from .camera import sync_scene_camera_state
+    from .reference_state import sync_scene_camera_state
 
     for scene in tuple(bpy.data.scenes):
         sync_scene_camera_state(scene, context={"scene": scene})

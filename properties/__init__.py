@@ -1,4 +1,4 @@
-"""Property groups for YL CameraRef."""
+"""Property groups for QuickRef."""
 
 from .settings import BG_AdjustRuntimeSettings, BG_Opacity_Settings
 

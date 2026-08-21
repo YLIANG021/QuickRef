@@ -6,9 +6,10 @@ from gpu_extras.batch import batch_for_shader
 from bpy_extras import view3d_utils
 
 from .. import i18n
-from ..core.camera import get_active_camera_bg
+from ..core.reference_state import get_active_camera_bg
+from .reference_helpers.reference_view import show_camera_in_current_view
 
-WM_PROP_RUNTIME = "yl_cameraref_runtime"
+WM_PROP_RUNTIME = "quickref_runtime"
 _active_adjust_operator = None
 
 
@@ -33,12 +34,11 @@ def stop_active_adjust(context=None):
     runtime = get_adjust_runtime(context or bpy.context)
     if runtime is None:
         return
-    runtime.reset_requested = False
     runtime.running = False
 
 
-class VIEW3D_OT_yl_cameraref_adjust_reference(bpy.types.Operator):
-    bl_idname = "view3d.yl_cameraref_adjust_reference"
+class VIEW3D_OT_quickref_adjust_reference(bpy.types.Operator):
+    bl_idname = "view3d.quickref_adjust_reference"
     bl_label = "Adjust Reference"
     bl_description = "Interactively move, scale, and rotate the active reference"
     bl_translation_context = i18n.CONTEXT
@@ -46,8 +46,8 @@ class VIEW3D_OT_yl_cameraref_adjust_reference(bpy.types.Operator):
 
     @classmethod
     def poll(cls, context):
-        if not is_camera_view(context):
-            cls.poll_message_set("Switch to Camera View to adjust the reference image")
+        area = getattr(context, "area", None)
+        if area is None or area.type != 'VIEW_3D':
             return False
         active_bg = get_active_camera_bg(context)[2]
         source = (
@@ -56,7 +56,7 @@ class VIEW3D_OT_yl_cameraref_adjust_reference(bpy.types.Operator):
             else None
         )
         if source is None:
-            cls.poll_message_set(i18n.tr_iface("Select a camera with a reference image."))
+            cls.poll_message_set(i18n.tr_iface("No active reference image"))
             return False
         return True
 
@@ -72,8 +72,13 @@ class VIEW3D_OT_yl_cameraref_adjust_reference(bpy.types.Operator):
 
         cam = context.scene.camera
         if not cam or not cam.data.background_images:
-            self.report({'WARNING'}, i18n.tr_report("Select a camera with a reference image."))
+            self.report({'WARNING'}, i18n.tr_report("No active reference image"))
             return {'CANCELLED'}
+
+        if not is_camera_view(context):
+            show_camera_in_current_view(context, cam)
+            if not is_camera_view(context):
+                return {'CANCELLED'}
 
         bg_images = cam.data.background_images
         settings = getattr(context.scene, 'bg_opacity_settings', None)
@@ -122,7 +127,6 @@ class VIEW3D_OT_yl_cameraref_adjust_reference(bpy.types.Operator):
         self._draw_handle = bpy.types.SpaceView3D.draw_handler_add(
             self.draw_callback, (), 'WINDOW', 'POST_PIXEL'
         )
-        runtime.reset_requested = False
         runtime.running = True
         _active_adjust_operator = self
         context.window_manager.modal_handler_add(self)
@@ -132,9 +136,12 @@ class VIEW3D_OT_yl_cameraref_adjust_reference(bpy.types.Operator):
     def _exit(self, context):
         global _active_adjust_operator
 
+        # A modal operator can miss the middle-button release when focus or the
+        # pointer leaves the originating window. Never carry navigation state
+        # across the lifetime of the operator.
+        self._is_navigating = False
         runtime = get_adjust_runtime(context)
         if runtime is not None:
-            runtime.reset_requested = False
             runtime.running = False
         if hasattr(self, "_draw_handle") and self._draw_handle:
             bpy.types.SpaceView3D.draw_handler_remove(self._draw_handle, 'WINDOW')
@@ -187,15 +194,6 @@ class VIEW3D_OT_yl_cameraref_adjust_reference(bpy.types.Operator):
         )
         return {'FINISHED'}
 
-    def _rebase_after_external_reset(self, context):
-        self.action = None
-        self.action_source = None
-        self.axis_lock = None
-        self._start_bounds = None
-        self._transform_center = None
-        self._history = [self._capture_state()]
-        self._tag_all_viewports(context)
-
     def _capture_state(self):
         return (
             float(self.bg.offset[0]),
@@ -243,6 +241,9 @@ class VIEW3D_OT_yl_cameraref_adjust_reference(bpy.types.Operator):
         self._finish_action(context)
 
     def _start_action(self, action, event, context, source='KEYBOARD'):
+        # Starting an adjustment is an unambiguous indication that navigation
+        # has ended, even if Blender did not deliver the MMB release event.
+        self._is_navigating = False
         self.action = action
         self.action_source = source
         if action != 'MOVE':
@@ -530,16 +531,31 @@ class VIEW3D_OT_yl_cameraref_adjust_reference(bpy.types.Operator):
             self._exit(context)
             return {'FINISHED'}
 
+        # Clear transient navigation state as soon as the window loses focus.
+        # This protects against a missing MIDDLEMOUSE release event.
+        if event.type in {'WINDOW_DEACTIVATE', 'WINDOW_ACTIVATE'}:
+            self._is_navigating = False
+            self._tag_all_viewports(context)
+            return {'PASS_THROUGH'}
+
         if not self._target_is_valid(context):
             return self._stop_for_target_change(context)
 
-        if runtime.reset_requested:
-            runtime.reset_requested = False
-            self._rebase_after_external_reset(context)
+        if not is_camera_view(context):
+            self._exit(context)
+            return {'FINISHED'}
 
         if event.type in {'RIGHTMOUSE', 'ESC'} and event.value == 'PRESS':
             self._exit(context)
             return {'FINISHED'}
+
+        # Handle the release before any pointer-region filtering. A release can
+        # occur outside the original 3D View, but it must still clear this
+        # operator's navigation guard.
+        if event.type == 'MIDDLEMOUSE' and event.value == 'RELEASE':
+            self._is_navigating = False
+            self._tag_all_viewports(context)
+            return {'PASS_THROUGH'}
 
         if event.type in {'LEFTMOUSE', 'MOUSEMOVE', 'WHEELUPMOUSE', 'WHEELDOWNMOUSE'} and self._is_view3d_ui_at_mouse(context, event.mouse_x, event.mouse_y):
             if self.action and event.type == 'LEFTMOUSE':
@@ -550,8 +566,11 @@ class VIEW3D_OT_yl_cameraref_adjust_reference(bpy.types.Operator):
             return {'PASS_THROUGH'}
 
         if event.type == 'MIDDLEMOUSE':
-            self._is_navigating = event.value != 'RELEASE'
+            self._is_navigating = event.value == 'PRESS'
             self._tag_all_viewports(context)
+            return {'PASS_THROUGH'}
+
+        if event.type == 'NUMPAD0':
             return {'PASS_THROUGH'}
 
         if event.type in {'WHEELUPMOUSE', 'WHEELDOWNMOUSE', 'NDOF_MOTION'}:
@@ -674,5 +693,5 @@ class VIEW3D_OT_yl_cameraref_adjust_reference(bpy.types.Operator):
 
 
 CLASSES = (
-    VIEW3D_OT_yl_cameraref_adjust_reference,
+    VIEW3D_OT_quickref_adjust_reference,
 )

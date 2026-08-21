@@ -5,21 +5,19 @@ from bpy.types import Scene, WindowManager
 
 from . import registry, subscriptions
 from .. import i18n
-from ..features import adjust, camera_tools
-from ..features.camera import add_view_camera
+from ..features import adjust
 from ..properties.settings import BG_AdjustRuntimeSettings, BG_Opacity_Settings
 
 
 def register():
     i18n.register()
+    registry.ui.register_panel_icons()
     registry.register_classes()
     Scene.bg_opacity_settings = PointerProperty(type=BG_Opacity_Settings)
-    camera_tools.register_properties()
-    WindowManager.yl_cameraref_runtime = PointerProperty(
+    WindowManager.quickref_runtime = PointerProperty(
         type=BG_AdjustRuntimeSettings,
     )
     registry.ui.register_header()
-    add_view_camera.register_menu()
     subscriptions.register()
 
 
@@ -28,12 +26,10 @@ def unregister():
     subscriptions.unregister()
     if hasattr(Scene, 'bg_opacity_settings'):
         del Scene.bg_opacity_settings
-    camera_tools.unregister_properties()
+    if hasattr(WindowManager, 'quickref_runtime'):
+        del WindowManager.quickref_runtime
 
-    if hasattr(WindowManager, 'yl_cameraref_runtime'):
-        del WindowManager.yl_cameraref_runtime
-
-    add_view_camera.unregister_menu()
     registry.ui.unregister_header()
     registry.unregister_classes()
+    registry.ui.unregister_panel_icons()
     i18n.unregister()

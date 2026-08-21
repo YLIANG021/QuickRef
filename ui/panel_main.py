@@ -3,95 +3,68 @@
 from bpy.types import Panel
 
 from .. import i18n
-from ..core.camera import get_active_camera_bg
+from ..core.reference_state import get_active_camera_bg
 from ..features import adjust
 from ..features.background_images import (
     BG_OT_AddImage,
     BG_OT_RemoveImage,
-    BG_OT_ResetAdjust,
     BG_OT_ToggleDepth,
     BG_OT_ToggleEnable,
     BG_PT_ImageSettingsPopover,
 )
-from ..features.camera.add_view_camera import BG_OT_NewCameraFromView
-from ..features.camera.camera_list import (
-    BG_MT_SceneCameras,
-    BG_OT_RemoveSceneCamera,
-    BG_PT_CameraSettingsPopover,
-    get_scene_cameras,
-)
+from .header import BG_PT_HeaderOpacitySettingsPopover
 
 
 class IMAGE_SWITCHER_PT_Panel(Panel):
-    bl_label = "YL CameraRef"
+    bl_label = "QuickRef"
     bl_translation_context = i18n.CONTEXT
     bl_idname = "IMAGE_SWITCHER_PT_panel"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
-    bl_category = 'YL CameraRef'
+    bl_category = 'View'
     bl_order = 5
 
     def draw(self, context):
         layout = self.layout
         cam, settings, active_bg = get_active_camera_bg(context)
-        scene_cameras = get_scene_cameras(context.scene)
-
-        if not scene_cameras:
-            create_row = layout.row()
-            create_row.scale_y = 1.5
-            create_row.operator(
-                BG_OT_NewCameraFromView.bl_idname,
-                text="Add Camera from View",
-                text_ctxt=i18n.CONTEXT,
-                icon='ADD',
-            )
-            layout.label(
-                text="No cameras in scene",
-                text_ctxt=i18n.CONTEXT,
-                icon='KEYTYPE_BREAKDOWN_VEC',
-            )
-            return
-
-        camera_row = layout.row(align=True)
-        camera_row.scale_y = 1.1
-        if cam:
-            camera_row.menu(
-                BG_MT_SceneCameras.bl_idname,
-                text=cam.name,
-                translate=False,
-                icon='CAMERA_DATA',
-            )
-        else:
-            camera_row.menu(
-                BG_MT_SceneCameras.bl_idname,
-                text="Select Camera",
-                text_ctxt=i18n.CONTEXT,
-                icon='CAMERA_DATA',
-            )
-        camera_row.operator(BG_OT_NewCameraFromView.bl_idname, text="", icon='ADD')
-
-        if cam:
-            camera_row.operator(BG_OT_RemoveSceneCamera.bl_idname, text="", icon='REMOVE')
-            camera_row.popover(
-                panel=BG_PT_CameraSettingsPopover.bl_idname,
-                text="",
-                icon='PREFERENCES',
-            )
 
         if not cam:
             layout.label(
-                text="Select a camera or create one from the current view.",
+                text="No active camera",
                 text_ctxt=i18n.CONTEXT,
-                icon='KEYTYPE_BREAKDOWN_VEC',
+                icon='CAMERA_DATA',
             )
             return
 
-        layout.row().label(text="Reference Images", text_ctxt=i18n.CONTEXT)
+        if not cam.data.background_images:
+            add_reference_row = layout.row()
+            add_reference_row.scale_y = 1.5
+            add_reference_row.operator(
+                BG_OT_AddImage.bl_idname,
+                text="Add Reference Image",
+                text_ctxt=i18n.CONTEXT,
+                icon='ADD',
+            )
+            return
 
         row = layout.row(align=True)
         row.scale_y = 1.2
-        row.operator(BG_OT_AddImage.bl_idname, text="Add", text_ctxt=i18n.CONTEXT)
-        row.operator(BG_OT_RemoveImage.bl_idname, text="Remove", text_ctxt=i18n.CONTEXT)
+        button_split = row.split(factor=1 / 3, align=True)
+        add_column = button_split.column(align=True)
+        add_column.operator(
+            BG_OT_AddImage.bl_idname,
+            text="",
+            text_ctxt=i18n.CONTEXT,
+            icon='ADD',
+        )
+        remaining_split = button_split.column(align=True).split(factor=0.5, align=True)
+        remove_column = remaining_split.column(align=True)
+        remove_column.operator(
+            BG_OT_RemoveImage.bl_idname,
+            text="",
+            text_ctxt=i18n.CONTEXT,
+            icon='REMOVE',
+        )
 
         runtime = adjust.get_adjust_runtime(context)
         is_running = bool(runtime and runtime.running)
@@ -99,24 +72,21 @@ class IMAGE_SWITCHER_PT_Panel(Panel):
             active_bg
             and (getattr(active_bg, "image", None) or getattr(active_bg, "clip", None))
         )
-        adjust_button = row.row(align=True)
-        adjust_button.enabled = has_reference_image and adjust.is_camera_view(context)
+        adjust_button = remaining_split.column(align=True)
+        adjust_button.enabled = has_reference_image
         adjust_button.operator(
-            adjust.VIEW3D_OT_yl_cameraref_adjust_reference.bl_idname,
+            adjust.VIEW3D_OT_quickref_adjust_reference.bl_idname,
             text="Adjust",
             text_ctxt=i18n.CONTEXT,
             depress=is_running,
         )
         image_settings = row.row(align=True)
         image_settings.enabled = active_bg is not None
-        if is_running:
-            image_settings.operator(BG_OT_ResetAdjust.bl_idname, text="", icon='FILE_REFRESH')
-        else:
-            image_settings.popover(
-                panel=BG_PT_ImageSettingsPopover.bl_idname,
-                text="",
-                icon='PREFERENCES',
-            )
+        image_settings.popover(
+            panel=BG_PT_ImageSettingsPopover.bl_idname,
+            text="",
+            icon='PREFERENCES',
+        )
 
         layout.template_list(
             "BG_UL_BackgroundImages",
@@ -175,15 +145,22 @@ class IMAGE_SWITCHER_PT_Panel(Panel):
                 icon=depth_icon,
             )
 
-        camera_tool_settings = context.scene.yl_camera_tools
-        layout.separator(factor=0.65)
-        layout.prop(
-            camera_tool_settings,
-            "show_tools",
-            text="Show CameraRef Tools",
+        layout.separator(factor=0.5)
+        header_row = layout.row(align=True)
+        header_row.prop(
+            settings,
+            "show_header_controls",
+            text="Header Opacity",
             text_ctxt=i18n.CONTEXT,
+            toggle=True,
         )
-
+        header_settings = header_row.row(align=True)
+        header_settings.enabled = settings.show_header_controls
+        header_settings.popover(
+            panel=BG_PT_HeaderOpacitySettingsPopover.bl_idname,
+            text="",
+            icon='PREFERENCES',
+        )
 
 CLASSES = (
     IMAGE_SWITCHER_PT_Panel,

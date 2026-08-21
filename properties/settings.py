@@ -11,17 +11,13 @@ class BG_AdjustRuntimeSettings(PropertyGroup):
         options={'HIDDEN', 'SKIP_SAVE'},
         default=False,
     )
-    reset_requested: BoolProperty(
-        options={'HIDDEN', 'SKIP_SAVE'},
-        default=False,
-    )
 
 
 def update_active_alpha(self, context):
     if self.is_updating:
         return
 
-    from ..core.camera import apply_alpha_to_scene_cameras
+    from ..core.reference_state import apply_alpha_to_scene_cameras
 
     apply_alpha_to_scene_cameras(getattr(context, "scene", None), self.active_alpha)
 
@@ -30,7 +26,7 @@ def update_active_image_index(self, context):
     if self.is_updating:
         return
 
-    from ..core.camera import get_camera_and_settings, sync_ui_alpha_from_active
+    from ..core.reference_state import get_camera_and_settings, sync_ui_alpha_from_active
 
     cam, settings = get_camera_and_settings(context)
     if not cam or not settings:
@@ -54,7 +50,7 @@ def update_opacity_enable(self, context):
     if self.is_updating:
         return
 
-    from ..core.camera import apply_alpha_to_scene_cameras, get_active_camera_bg
+    from ..core.reference_state import apply_alpha_to_scene_cameras, get_active_camera_bg
 
     cam, settings, active_bg = get_active_camera_bg(context)
     if not cam:
@@ -88,8 +84,25 @@ class BG_Opacity_Settings(PropertyGroup):
         update=update_opacity_enable,
     )
     show_header_controls: BoolProperty(
-        name="Show Opacity in Header",
+        name="Header Opacity",
         description="Show the reference opacity control in the 3D View header",
+        translation_context=i18n.CONTEXT,
+        default=False,
+    )
+    header_opacity_width: FloatProperty(
+        name="Slider Width",
+        description="Width of the opacity slider in the 3D View header",
+        translation_context=i18n.CONTEXT,
+        default=5.0,
+        min=3.0,
+        max=20.0,
+        soft_max=12.0,
+        step=10,
+        precision=1,
+    )
+    show_header_visibility_toggle: BoolProperty(
+        name="Quick Background Toggle",
+        description="Show the background visibility toggle beside the header opacity slider",
         translation_context=i18n.CONTEXT,
         default=False,
     )

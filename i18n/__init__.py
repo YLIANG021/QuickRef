@@ -17,7 +17,7 @@ from . import (
 )
 
 
-CONTEXT = "yl_cameraref"
+CONTEXT = "quickref"
 
 
 def _with_addon_context(translations):

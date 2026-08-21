@@ -7,27 +7,26 @@ from bpy.props import CollectionProperty, StringProperty
 from bpy.types import Operator, OperatorFileListElement, Panel, UIList
 
 from .. import i18n
-from ..core.camera import get_active_camera_bg, get_camera_and_settings, sync_ui_alpha_from_active
-from .adjust import get_adjust_runtime
+from ..core.reference_state import get_active_camera_bg, get_camera_and_settings, sync_ui_alpha_from_active
 
 
 def poll_camera(cls, context):
     cam, _ = get_camera_and_settings(context)
     if cam is not None:
         return True
-    cls.poll_message_set(i18n.tr_iface("Select a camera or create one from the current view."))
+    cls.poll_message_set(i18n.tr_iface("No active camera"))
     return False
 
 
 def poll_active_background(cls, context):
     if get_active_camera_bg(context)[2] is not None:
         return True
-    cls.poll_message_set(i18n.tr_iface("Select a camera with a reference image."))
+    cls.poll_message_set(i18n.tr_iface("No active reference image"))
     return False
 
 
 class BG_OT_ToggleEnable(Operator):
-    bl_idname = "camera.yl_cameraref_toggle_visibility"
+    bl_idname = "quickref.toggle_visibility"
     bl_label = "Toggle Reference Visibility"
     bl_description = "Show or hide the active camera's reference images"
     bl_translation_context = i18n.CONTEXT
@@ -43,7 +42,7 @@ class BG_OT_ToggleEnable(Operator):
 
 
 class BG_OT_ToggleDepth(Operator):
-    bl_idname = "camera.yl_cameraref_toggle_depth"
+    bl_idname = "quickref.toggle_depth"
     bl_label = "Toggle Reference Layer"
     bl_description = "Display the active reference in front of or behind scene geometry"
     bl_translation_context = i18n.CONTEXT
@@ -61,7 +60,7 @@ class BG_OT_ToggleDepth(Operator):
 
 
 class BG_OT_AddImage(Operator):
-    bl_idname = "camera.yl_cameraref_add_reference"
+    bl_idname = "quickref.add_reference"
     bl_label = "Add Reference Image"
     bl_description = "Load one or more images as camera references"
     bl_translation_context = i18n.CONTEXT
@@ -131,7 +130,7 @@ class BG_OT_AddImage(Operator):
 
 
 class BG_OT_RemoveImage(Operator):
-    bl_idname = "camera.yl_cameraref_remove_reference"
+    bl_idname = "quickref.remove_reference"
     bl_label = "Remove Reference Image"
     bl_description = "Remove the active reference from the camera"
     bl_translation_context = i18n.CONTEXT
@@ -167,7 +166,7 @@ class BG_OT_RemoveImage(Operator):
 
 
 class BG_OT_ReplaceImage(Operator):
-    bl_idname = "camera.yl_cameraref_replace_reference"
+    bl_idname = "quickref.replace_reference"
     bl_label = "Replace Reference Image"
     bl_description = "Replace the image and keep its settings."
     bl_translation_context = i18n.CONTEXT
@@ -215,7 +214,7 @@ class BG_OT_ReplaceImage(Operator):
 
 
 class BG_OT_DuplicateReference(Operator):
-    bl_idname = "camera.yl_cameraref_duplicate_reference"
+    bl_idname = "quickref.duplicate_reference"
     bl_label = "Duplicate Reference"
     bl_description = "Duplicate the image with independent settings."
     bl_translation_context = i18n.CONTEXT
@@ -256,34 +255,6 @@ class BG_OT_DuplicateReference(Operator):
         return {'FINISHED'}
 
 
-class BG_OT_ResetAdjust(Operator):
-    bl_idname = "camera.yl_cameraref_reset_reference"
-    bl_label = "Reset Transform"
-    bl_description = "Reset offset, scale, and rotation for the active reference"
-    bl_translation_context = i18n.CONTEXT
-    bl_options = {'UNDO'}
-
-    @classmethod
-    def poll(cls, context):
-        return poll_active_background(cls, context)
-
-    def execute(self, context):
-        _, settings, active_bg = get_active_camera_bg(context)
-        if not active_bg:
-            return {'CANCELLED'}
-
-        active_bg.offset[0] = 0.0
-        active_bg.offset[1] = 0.0
-        active_bg.scale = 1.0
-        active_bg.rotation = 0.0
-        runtime = get_adjust_runtime(context)
-        if runtime is not None and runtime.running:
-            runtime.reset_requested = True
-        sync_ui_alpha_from_active(settings, context=context)
-        self.report({'INFO'}, i18n.tr_report("Transform reset."))
-        return {'FINISHED'}
-
-
 class BG_PT_ImageSettingsPopover(Panel):
     bl_idname = "BG_PT_image_settings_popover"
     bl_label = "Reference Image Settings"
@@ -297,8 +268,7 @@ class BG_PT_ImageSettingsPopover(Panel):
 
     def draw(self, context):
         layout = self.layout
-        active_bg = get_active_camera_bg(context)[2]
-        if active_bg is None:
+        if get_active_camera_bg(context)[2] is None:
             layout.label(
                 text="No active reference image",
                 text_ctxt=i18n.CONTEXT,
@@ -306,36 +276,9 @@ class BG_PT_ImageSettingsPopover(Panel):
             )
             return
 
-        layout.operator(BG_OT_ReplaceImage.bl_idname, icon='FILEBROWSER')
-        layout.operator(BG_OT_DuplicateReference.bl_idname, icon='DUPLICATE')
-
-        layout.separator()
-        layout.label(text="Display", text_ctxt=i18n.CONTEXT)
-        frame_row = layout.row(align=True)
-        frame_row.prop_enum(active_bg, "frame_method", 'FIT', text="Fit", text_ctxt=i18n.CONTEXT)
-        frame_row.prop_enum(active_bg, "frame_method", 'CROP', text="Fill", text_ctxt=i18n.CONTEXT)
-        frame_row.prop_enum(active_bg, "frame_method", 'STRETCH', text="Stretch", text_ctxt=i18n.CONTEXT)
-
-        layout.separator()
-        layout.label(text="Transform", text_ctxt=i18n.CONTEXT)
-        flip_row = layout.row(align=True)
-        flip_row.prop(active_bg, "use_flip_x", text="Flip Horizontal", text_ctxt=i18n.CONTEXT, toggle=True)
-        flip_row.prop(active_bg, "use_flip_y", text="Flip Vertical", text_ctxt=i18n.CONTEXT, toggle=True)
-
-        layout.label(text="Offset", text_ctxt=i18n.CONTEXT)
-        offset_row = layout.row(align=True)
-        offset_row.prop(active_bg, "offset", index=0, text="X")
-        offset_row.prop(active_bg, "offset", index=1, text="Y")
-        layout.prop(active_bg, "scale", text="Scale", text_ctxt=i18n.CONTEXT)
-        layout.prop(active_bg, "rotation", text="Rotation", text_ctxt=i18n.CONTEXT)
-
-        layout.separator()
-        layout.operator(
-            BG_OT_ResetAdjust.bl_idname,
-            text="Reset Transform",
-            text_ctxt=i18n.CONTEXT,
-            icon='FILE_REFRESH',
-        )
+        reference_actions = layout.column(align=True)
+        reference_actions.operator(BG_OT_ReplaceImage.bl_idname, icon='FILEBROWSER')
+        reference_actions.operator(BG_OT_DuplicateReference.bl_idname, icon='DUPLICATE')
 
 
 class BG_UL_BackgroundImages(UIList):
@@ -364,7 +307,6 @@ CLASSES = (
     BG_OT_RemoveImage,
     BG_OT_ReplaceImage,
     BG_OT_DuplicateReference,
-    BG_OT_ResetAdjust,
     BG_PT_ImageSettingsPopover,
     BG_UL_BackgroundImages,
 )
