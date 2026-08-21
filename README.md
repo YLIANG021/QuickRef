@@ -1,96 +1,81 @@
-# YL CameraRef
+# QuickRef
 
-YL CameraRef is a camera reference image tool for Blender. It brings camera creation from the current view, per-camera reference image management, direct viewport adjustments, and composition utilities together in one compact workflow.
+QuickRef 是一个用于 Blender 参考图管理和视口调整的工具。
+它适用于建模、临摹、场景布局和参考对照，帮助你：
 
-Each camera view can have its own collection of reference images. You can quickly switch between different camera views and reference images, making it useful for scene layout, blockouts, modeling, and visual alignment.
-
-### ✨ With YL CameraRef, you can:
-
-- 📷 Quickly create a camera from the current view, supporting both perspective and orthographic views
-- 🖼️ Add and manage independent reference images for different cameras
-- 🔄 Quickly add, switch, replace, or duplicate multiple reference images on the same camera
-- ✋ Move, scale, and rotate reference images directly in the camera view with immediate visual feedback
-- 👁️ Quickly control reference image opacity, visibility, and front/back display depth
-- 📐 Adjust an object's depth while preserving its composition in the camera frame
-- 🎥 Dolly the camera and use Dolly Zoom to preserve the selected subject's size in the frame
+- 🖼️ 快速管理和切换多张参考图
+- ✋ 直接在视口中移动、缩放和旋转参考图
+- 🎚️ 在标题栏快速调整透明度和显示状态
+- ⚡ 减少复杂参数设置，让参考图调整更加直观
 
 ---
 
-## Language Support
+## 核心功能
 
-- Supports English, 简体中文, 繁體中文, 日本語, 한국어, Deutsch, Français, Español, Italiano, Polski, Português, Русский, and Tiếng Việt.
+### 1. 🖼️ 多参考图列表
 
----
-
-## Core Features
-
-### 1. 📷 Quickly Create a Camera from the Current View
-
-- Whether you are in a perspective or orthographic view, you can create a camera directly from the current viewpoint. The new camera matches the current view and immediately enters camera view, giving you exactly what you see. You can also quickly add one from the `Shift+A` menu.
-
-- This is useful for quickly saving the current composition after navigating the scene, finding a suitable angle, or completing viewpoint alignment.
-
-<img width="800" height="450" alt="添加" src="https://github.com/user-attachments/assets/987f002d-9e4f-463c-9d3b-b8596aec3c8a" />
+支持同时添加和管理多张参考图。你可以通过列表自由切换当前参考图，无论是几张图，都可以快速选择和查看。
 
 
-### 2. 🖼️ Quickly Switch Cameras and Directly Adjust Reference Images
-
-#### 2.1 Switch Cameras and Reference Image Workspaces
-
-- Quickly switch between cameras from the list and immediately enter the corresponding camera view. Each camera retains its own collection of reference images, active reference image, and display settings, making it easy to switch between and compare multiple viewpoints.
-
-<img width="800" height="450" alt="切换图" src="https://github.com/user-attachments/assets/bdfb3cec-1b24-46d1-8e04-003f555aee1b" />
-
-
-#### 2.2 Directly Adjust Reference Images
-
-- After clicking "Adjust," you can move, scale, and rotate the reference image directly in the camera view. X/Y axis locking, fine adjustments, and snapping are supported. No numerical input is required, and every adjustment is shown directly in the viewport.
-
-- If you start Adjust outside Camera View, YL CameraRef switches to the active camera view automatically. Leaving Camera View ends Adjust automatically.
-
-<img width="800" height="450" alt="adjust" src="https://github.com/user-attachments/assets/652f04db-5b0e-4df7-a237-76328a49087a" />
-
-
-### 3. 🧰 CameraRef Tools
-
-CameraRef Tools is a compact set of camera composition and reference image utilities. It is collapsed by default and available whenever a camera is selected. Tools that require a reference image appear only after one is added.
-
-#### 3.1 Header Opacity
-
-- Display the active reference image opacity control in the 3D View header, allowing you to adjust transparency without reopening the CameraRef panel.
-
-<img width="800" height="450" alt="快速按钮" src="https://github.com/user-attachments/assets/0eb3e644-44cb-4585-909c-1857a943ba2a" />
-
-
-#### 3.2 Adjust Object Depth While Preserving Composition (Perspective Cameras Only; Select a Target Mesh First)
-
-- In a perspective camera view, adjust the selected object's forward or backward depth while keeping its appearance in the camera frame unchanged. This makes it easier to adjust scene depth and occlusion relationships.
-
-<img width="800" height="450" alt="物体不变" src="https://github.com/user-attachments/assets/b8d18083-4add-4e21-a131-02b53423eff7" />
-
-#### 3.3 Camera Dolly and Dolly Zoom (Perspective Cameras Only; Select a Target Mesh Before Using Dolly Zoom)
-
-- By default, the current camera can be moved forward or backward along its viewing axis to adjust the distance between the camera and the scene.
-
-- When "Dolly Zoom" is enabled, the focal length is automatically compensated while the camera moves, keeping the selected subject's position and size unchanged in the frame to create a Hitchcock zoom effect.
-
-<img width="800" height="450" alt="希区柯克" src="https://github.com/user-attachments/assets/77f67e45-a8d5-42d8-a634-2856a73fe5a5" />
-
-#### 3.4 ⚙️ Composition and Output Utilities
-
-- CameraRef Tools also provides camera Shift X/Y and Use Reference Image Resolution, which sets the render resolution to the active reference image dimensions.
-
-<img width="723" height="732" alt="QQ20260719-114717" src="https://github.com/user-attachments/assets/9842c64f-d5a1-4f32-ac53-914972f0a61d" />
 
 ---
 
-## Getting Started
+### 2. ✋ 在视口中直接调整参考图
 
-- Install and enable `YL CameraRef`.
-- Press `N` in the 3D View to open the sidebar, then select the `YL CameraRef` tab.
+选中参考图后，点击“调整”即可直接在视口中进行拖拽操作。 不必调整复杂参数，拖动就能完成对齐，所见即所得。
+- `G`：移动  `S`：缩放  `R`：旋转
+- `Shift`：精细调整  `Ctrl`：吸附调整 `X / Y`：锁定方向
+- 鼠标左键：确认 鼠标右键或 `Esc`：退出）
+
+
 
 ---
 
-## License
+### 3. ⚡ 标题栏快捷控制参考图
 
-- This add-on is licensed under `GPL-3.0-or-later`.
+QuickRef 可以将参考图控制项显示在 3D 视图标题栏中。启用后，即使不打开侧栏面板，也可以直接调整，
+
+
+---
+
+## 其他功能
+
+QuickRef 将参考图常用的显示设置集中到一起，减少查找和切换设置的步骤，让调整更加方便。
+
+- 快速控制参考图显示在场景内容的前方或后方
+- 为每张参考图分别保留透明度、位置、缩放和旋转等设置
+
+
+## 插件文位置
+
+1. 在 3D 视图中按 `N` 打开侧栏。进入 `View` 标签页。打开 `QuickRef` 面板。
+
+
+
+---
+
+## 语言支持
+
+QuickRef 支持以下语言：
+
+- English
+- 简体中文
+- 繁體中文
+- 日本語
+- 한국어
+- Deutsch
+- Français
+- Español
+- Italiano
+- Polski
+- Português
+- Русский
+- Tiếng Việt
+
+---
+
+## 系统要求
+
+- Blender 4.2.0 或更高版本
+
+---
