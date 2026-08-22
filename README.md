@@ -1,62 +1,66 @@
 # QuickRef
 
-QuickRef 是一个用于 Blender 参考图管理和视口调整的工具。
-它适用于建模、临摹、场景布局和参考对照，帮助你：
+QuickRef is a Blender tool for managing and adjusting reference images directly in the viewport.
 
-- 🖼️ 快速管理和切换多张参考图
-- ✋ 直接在视口中移动、缩放和旋转参考图
-- 🎚️ 在标题栏快速调整透明度和显示状态
-- ⚡ 减少复杂参数设置，让参考图调整更加直观
+It is useful for modeling, tracing, scene layout, and visual comparison, helping you:
 
----
-
-## 核心功能
-
-### 1. 🖼️ 多参考图列表
-
-支持同时添加和管理多张参考图。你可以通过列表自由切换当前参考图，无论是几张图，都可以快速选择和查看。
-
-
+- 🖼️ Quickly manage and switch between multiple reference images
+- ✋ Move, scale, and rotate reference images directly in the viewport
+- 🎚️ Quickly control opacity and visibility from the header
+- ⚡ Avoid complicated settings and adjust reference images more intuitively
 
 ---
 
-### 2. ✋ 在视口中直接调整参考图
+## How to Use
 
-选中参考图后，点击“调整”即可直接在视口中进行拖拽操作。 不必调整复杂参数，拖动就能完成对齐，所见即所得。
-- `G`：移动  `S`：缩放  `R`：旋转
-- `Shift`：精细调整  `Ctrl`：吸附调整 `X / Y`：锁定方向
-- 鼠标左键：确认 鼠标右键或 `Esc`：退出）
-
-
+1. Press `N` in the 3D Viewport, open the `View` tab, and expand the `QuickRef` panel.
+2. Press Numpad `0` to enter Camera View, then add, view, and adjust your reference images.
 
 ---
 
-### 3. ⚡ 标题栏快捷控制参考图
+## Core Features
 
-QuickRef 可以将参考图控制项显示在 3D 视图标题栏中。启用后，即使不打开侧栏面板，也可以直接调整，
+### 1. 🖼️ Multiple Reference Image List
 
+Add and manage multiple reference images in one place.
 
----
-
-## 其他功能
-
-QuickRef 将参考图常用的显示设置集中到一起，减少查找和切换设置的步骤，让调整更加方便。
-
-- 快速控制参考图显示在场景内容的前方或后方
-- 为每张参考图分别保留透明度、位置、缩放和旋转等设置
-
-
-## 插件文位置
-
-1. 在 3D 视图中按 `N` 打开侧栏。进入 `View` 标签页。打开 `QuickRef` 面板。
-
-
+Quickly switch between images from the list, making it easy to select and view any reference no matter how many you have added.
 
 ---
 
-## 语言支持
+### 2. ✋ Adjust Reference Images Directly in the Viewport
 
-QuickRef 支持以下语言：
+Select a reference image and click `Adjust` to edit it directly in the viewport.
+
+Move it into place without dealing with complicated parameters. What you see is what you get.
+
+- `G`: Move　`S`: Scale　`R`: Rotate
+- `Shift`: Fine adjustment　`Ctrl`: Snap　`X / Y`: Lock axis
+- Left Mouse Button: Confirm
+- Right Mouse Button or `Esc`: Exit
+
+---
+
+### 3. ⚡ Quick Reference Controls in the Header
+
+QuickRef can display reference image controls in the 3D Viewport header.
+
+Once enabled, you can quickly adjust opacity and visibility without opening the sidebar panel.
+
+---
+
+## Additional Features
+
+QuickRef brings commonly used reference image settings together, reducing the time spent searching for and switching between controls.
+
+- Quickly display reference images in front of or behind scene content
+- Preserve individual position, scale, and rotation settings for each reference image
+
+---
+
+## Language Support
+
+QuickRef supports the following languages:
 
 - English
 - 简体中文
@@ -74,8 +78,6 @@ QuickRef 支持以下语言：
 
 ---
 
-## 系统要求
+## System Requirements
 
-- Blender 4.2.0 或更高版本
-
----
+- Blender 4.2.0 or later
