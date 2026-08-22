@@ -25,6 +25,7 @@ It is useful for modeling, tracing, scene layout, and visual comparison, helping
 Add and manage multiple reference images in one place.
 
 Quickly switch between images from the list, making it easy to select and view any reference no matter how many you have added.
+<img width="810" height="480" alt="8月22日(2)" src="https://github.com/user-attachments/assets/8c693a33-f255-40ca-99c6-9b044628fb0e" />
 
 ---
 
@@ -38,6 +39,7 @@ Move it into place without dealing with complicated parameters. What you see is 
 - `Shift`: Fine adjustment　`Ctrl`: Snap　`X / Y`: Lock axis
 - Left Mouse Button: Confirm
 - Right Mouse Button or `Esc`: Exit
+<img width="810" height="480" alt="8月22日(1)" src="https://github.com/user-attachments/assets/57dd58ec-4217-4f41-9564-89ae4ea1c764" />
 
 ---
 
@@ -46,6 +48,7 @@ Move it into place without dealing with complicated parameters. What you see is 
 QuickRef can display reference image controls in the 3D Viewport header.
 
 Once enabled, you can quickly adjust opacity and visibility without opening the sidebar panel.
+<img width="810" height="480" alt="8月22日" src="https://github.com/user-attachments/assets/9f9bfbbc-408f-482d-b3b8-ccf4ff2b7acc" />
 
 ---
 
