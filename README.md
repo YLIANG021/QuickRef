@@ -30,6 +30,7 @@ QuickRef 是一款专为 Blender 打造的参考图效率工具，它优化了�
 
 已经找到了合适的视角？一键将当前透视或正交视图转换为匹配的摄像机，不用再次对齐摄像机
 
+<img width="810" height="480" alt="8月27日" src="https://github.com/user-attachments/assets/84faef1a-a42c-45cf-911d-c2f471ae0039" />
 ---
 
 ### 3. ✋ 在 Camera View 中直接调整
