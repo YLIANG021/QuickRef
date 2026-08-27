@@ -1,89 +1,73 @@
 # QuickRef
 
-QuickRef is a simple tool for managing and adjusting reference images directly in the viewport.
+QuickRef 是一款专为 Blender 打造的参考图效率工具，它优化了摄像机参考图的操作流程，让添加、切换和调整更快更直观，少翻设置、少调参数，快速完成对照与构图。
 
-Whether you are modeling a scene, product, character, or prop, QuickRef helps you compare your work with reference images and make quick composition and detail adjustments:
+- 🖼️ 快速管理和切换多张参考图
+- ✋ 在视图中直接移动、缩放和旋转参考图，不必再设置复杂的参考图参数
+- 🎚️ 在视图顶部标题栏快速调整不透明度和显隐，无需打开侧栏，不遮挡画面，也不影响其他插件操作。
+- ⚡ 从当前视图快速创建摄像机
 
-- 🖼️ Quickly manage and switch between multiple reference images
-- ✋ Move, scale, and rotate reference images directly in the viewport
-- 🎚️ Quickly control opacity and visibility from the header
-- ⚡ Reduce complicated settings and make reference image adjustments more intuitive
-
----
-
-## How to Use
-
-1. Press `N` in the 3D Viewport to open the sidebar, then open the `View` tab and expand the `QuickRef` panel.
-2. Press Numpad `0` to enter Camera View, then add, view, and adjust your reference images.
 
 ---
 
-## Core Features
+## 插件位置
 
-### 1. 🖼️ Multiple Reference Image List
+1. 在 3D View 中按 `N`，打开侧栏的 `View` → `QuickRef`。
 
-Add and manage multiple reference images in one list.
+---
 
-No matter how many images you add, you can quickly switch, select, and view them from the list.
+## 核心功能
+
+### 1. 🖼️ 集中管理多张参考图
+
+在同一个面板中快速添加、切换、复制、替换和删除参考图，不必反复打开 Blender 的背景图设置。
 
 <img width="810" height="480" alt="August 22 (2)" src="https://github.com/user-attachments/assets/8c693a33-f255-40ca-99c6-9b044628fb0e" />
 
 ---
 
-### 2. ✋ Adjust Reference Images Directly in the Viewport
+### 2. ⚡ 从当前视图快速创建摄像机
 
-Select a reference image and click `Adjust` to edit it directly in the viewport.
-
-You no longer need to set the position, rotation, and scale parameters for each image individually. Simply drag to adjust it and see the result instantly.
-
-- `G`: Move　`S`: Scale　`R`: Rotate
-- `Shift`: Fine adjustment　`Ctrl`: Snap　`X / Y`: Lock axis
-- Left Mouse Button: Confirm
-- Right Mouse Button or `Esc`: Exit
-
-<img width="810" height="480" alt="August 22 (1)" src="https://github.com/user-attachments/assets/57dd58ec-4217-4f41-9564-89ae4ea1c764" />
+已经找到了合适的视角？一键将当前透视或正交视图转换为匹配的摄像机，不用再次对齐摄像机
 
 ---
 
-### 3. ⚡ Quick Reference Controls in the Header
+### 3. ✋ 在 Camera View 中直接调整
 
-QuickRef can place reference image controls in the upper-right corner of the 3D Viewport header.
+点击 `Adjust` 后，可以在3d视口拖拽对齐参考图，避免再去调复杂，不直观的参数
 
-You do not need to open the sidebar, so your viewport stays unobstructed and other tools remain easy to use. Whether the panel is open or closed, you can quickly adjust opacity and visibility directly from the header.
+- `G`：移动　`S`：缩放　`R`：旋转 
+- `Shift`：精细调整　`Ctrl`：数值吸附  
+- 鼠标左键：确认 鼠标右键或 `Esc`：退出
+
+<img width="810" height="480" alt="August 22 (1)" src="https://github.com/user-attachments/assets/57dd58ec-4217-4f41-9564-89ae4ea1c764" />
+
+
+---
+
+### 4. 🎚️ 把常用控制放在手边
+
+开启标题栏控件后，可在 3D View 顶部快速调整参考图不透明度和显隐状态，无需打开侧栏，不遮挡画面，也不影响使用其他插件。
 
 <img width="810" height="480" alt="August 22" src="https://github.com/user-attachments/assets/9f9bfbbc-408f-482d-b3b8-ccf4ff2b7acc" />
 
 ---
 
-## Additional Features
+## 更多特性
 
-QuickRef brings commonly used reference image settings together, reducing the time spent searching for and switching between controls.
-
-- Quickly show reference images in front of or behind scene content
-- Preserve individual position, scale, and rotation settings for each reference image
-
----
-
-## Language Support
-
-QuickRef supports the following languages:
-
-- English
-- 简体中文
-- 繁體中文
-- 日本語
-- 한국어
-- Deutsch
-- Français
-- Español
-- Italiano
-- Polski
-- Português
-- Русский
-- Tiếng Việt
+- 复制摄像机及其参考图设置
+- 快速修改投影类型、焦距和正交缩放
+- 图片丢失时直接替换，并保留原有参考图设置
 
 ---
 
-## System Requirements
+## 语言支持
 
-- Blender 4.2.0 or later
+英语、简体中文、繁体中文、日语、韩语、德语、法语、西班牙语、意大利语、波兰语、葡萄牙语、俄语、越南语。
+
+---
+
+## 系统要求
+
+- Blender 4.2.0 或更高版本
+
