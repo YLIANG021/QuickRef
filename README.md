@@ -1,96 +1,124 @@
 # QuickRef
 
-QuickRef is an efficient reference-image tool built specifically for Blender. It streamlines the workflow for camera reference images, making them faster and more intuitive to add, switch, and adjust, with less time spent digging through settings or tweaking parameters, so you can quickly complete comparisons and composition.
+QuickRef 帮你更快捷地使用 Blender 相机参考图。添加、查看和调整都更快，让你更快完成画面对照和场景调整。
 
-- 🖼️ Quickly manage and switch between multiple reference images
-- ✋ Move, scale, and rotate reference images directly in the viewport without configuring complex reference-image parameters
-- 🎚️ Quickly adjust opacity and visibility from the viewport header without opening the sidebar, blocking the view, or interfering with other add-ons
-- 🎬 Use two composition modes to quickly match the camera and scene
-- ⚡ Quickly create a camera from the current view
-
----
-
-## Add-on Location
-
-1. In the 3D View, press `N`, then open `View` → QuickRef in the sidebar.
+- 🖼️ 快速管理和切换多张参考图
+- ✋ 直接移动、缩放和旋转参考图，无需设置复杂参数
+- 🎚️ 在顶部栏调整透明度和显示状态
+- 🎬 快速调整画面透视和物体远近
+- ⚡ 从当前视角创建相机
 
 ---
 
-## Language Support
+## 插件位置
+
+1. 在 3D 视图中按 `N`，然后在侧栏打开 `视图` → QuickRef。
+
+---
+
+## 支持语言
 
 English • 简体中文 • 繁體中文 • 日本語 • 한국어 • Deutsch • Français • Español • Italiano • Polski • Português • Русский • Tiếng Việt
 
 ---
 
-## Core Features
+## 核心功能
 
-### 1. 🖼️ Manage Multiple Reference Images in One Place
+### 1. 🖼️ 集中管理多张参考图
 
-Quickly add, switch, duplicate, replace, and delete reference images from a single panel without repeatedly opening Blender's background-image settings.
+在一个面板中快速操作多张参考图，无需反复打开 Blender 的背景图设置。
+
+
 
 <img width="810" height="480" alt="August 22 (2)" src="https://github.com/user-attachments/assets/8c693a33-f255-40ca-99c6-9b044628fb0e" />
 
+
+
 ---
 
-### 2. ⚡ Quickly Create a Camera from the Current View
+### 2. ⚡ 从当前视图快速创建相机
 
-Found the right angle? Convert the current perspective or orthographic view into a matching camera with one click, without having to align the camera again.
+找到合适角度后，一键创建匹配的相机，不用再手动对一遍摄像机
+
+
 
 <img width="810" height="480" alt="8月27日" src="https://github.com/user-attachments/assets/84faef1a-a42c-45cf-911d-c2f471ae0039" />
 
+
+
 ---
 
-### 3. ✋ Adjust Directly in Camera View
+### 3. ✋ 在相机视图中直接调整
 
-After clicking `Adjust`, drag in the 3D viewport to align the reference image, avoiding complex and unintuitive parameter adjustments.
+点击 `调整` 后，可直接在 3D 视图中拖动对齐参考图，用直观的拖动代替调复杂参数
 
-- `G`: Move　`S`: Scale　`R`: Rotate
-- `Shift`: Fine adjustment　`Ctrl`: Numeric snapping
-- Left mouse button: Confirm　Right mouse button or `Esc`: Exit
+- `G`：移动　`S`：缩放　`R`：旋转
+- `Shift`：微调　`Ctrl`：数值吸附
+- 左键：确认　右键：退出
+
+
 
 <img width="810" height="480" alt="August 22 (1)" src="https://github.com/user-attachments/assets/57dd58ec-4217-4f41-9564-89ae4ea1c764" />
 
+
+
 ---
 
-### 4. 🎬 Quickly Match Composition with Two Modes *(New in v1.2.0)*
+### 4. 🎬 通过两种调整方式匹配画面
 
-When the perspective and occlusion relationships in the scene do not match the reference image, QuickRef helps you quickly adjust perspective and occlusion while preserving the composition.
+当场景的透视或物体远近关系与参考图不一致时，可以在保持画面构图不变的同时，快速进行调整。
 
-Choose an adjustment mode in Tools, use the eyedropper to pick an object, then click the play button to start adjusting.
+在“工具”中选择调整模式，然后确保你选中了物体，然后点击play图标开始调整
 
-#### Adjust Perspective Mode *(New in v1.2.0)*
+#### 调整画面透视
 
-Adjust the camera position and focal length together, changing the perspective while keeping the target's size and position in the frame. This makes perspective matching faster and more intuitive.
+选好物体后，保持物体画面不变的前提下改变透视，使透视调整更快速、更直观。
+
+（插件自动补偿透视数值和相机位置，避免手动调整透视后还得调整摄像机位置的弊端）
+
+
 
 <img width="810" height="480" alt="8月29日(2)" src="https://github.com/user-attachments/assets/6be3c7dc-b8fc-4c59-b6de-6ce69619a547" />
 
-#### Adjust Occlusion Mode *(New in v1.2.0)*
 
-Adjust the target object's position and size together to quickly change its front-to-back occlusion relationship with other objects while preserving the composition, eliminating repeated moving, scaling, and realignment.
+
+#### 调整物体远近
+
+快速改变物体的遮挡和远近关系，却不改变物体在视图中的显示
+
+（当你参考图已经调好却还想调整物体，这个功能将尤为有用，支持编辑模式）
+
+
 
 <img width="810" height="480" alt="8月29日" src="https://github.com/user-attachments/assets/afb6edd4-8d7c-4afe-b6d5-3f293538b62d" />
 
 
+
+
 ---
 
-### 5. 🎚️ Keep Common Controls Close at Hand
+### 5. 🎚️ 常用控制随手可用
 
-Once the header controls are enabled, quickly adjust reference-image opacity and visibility from the top of the 3D View without opening the sidebar, blocking the view, or interfering with other add-ons.
+启用顶部栏控制后，可在窗口右上角随时调整参考图透明度和显示状态，无需打开N侧栏，不遮挡视图，也不影响用其他插件。
+
+
 
 <img width="810" height="480" alt="August 22" src="https://github.com/user-attachments/assets/9f9bfbbc-408f-482d-b3b8-ccf4ff2b7acc" />
 
----
 
-## More Features
-
-- Duplicate a camera and its reference-image settings
-- Quickly change the projection type, focal length, and orthographic scale
-- Replace missing images directly while preserving the original reference-image settings
-- Use a single eyedropper button to select a Mesh, Empty, or Curve as the composition-adjustment target
-- View mouse controls and confirmation instructions in the on-screen HUD
 
 ---
 
-## System Requirements
+## 更多功能
 
-- Blender 4.2.0 or later
+- 复制相机及其参考图设置
+- 快速切换投影类型、焦距和正交缩放
+- 直接替换丢失的图片，并保留原有参考图设置
+- 根据当前选择进行画面透视或物体远近调整
+- 在屏幕提示中查看鼠标操作和确认方式
+
+---
+
+## 系统要求
+
+- Blender 4.2.0 或更高版本
