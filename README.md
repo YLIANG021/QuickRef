@@ -78,7 +78,8 @@ English • 简体中文 • 繁體中文 • 日本語 • 한국어 • Deutsc
 
 
 
-<img width="810" height="480" alt="8月29日(2)" src="https://github.com/user-attachments/assets/6be3c7dc-b8fc-4c59-b6de-6ce69619a547" />
+<img width="820" height="460" alt="9月1日" src="https://github.com/user-attachments/assets/be2adfcf-ef9b-4931-ab96-fbbf3a52ba68" />
+
 
 
 
@@ -90,7 +91,8 @@ English • 简体中文 • 繁體中文 • 日本語 • 한국어 • Deutsc
 
 
 
-<img width="810" height="480" alt="8月29日" src="https://github.com/user-attachments/assets/afb6edd4-8d7c-4afe-b6d5-3f293538b62d" />
+<img width="820" height="460" alt="9月1日(1)" src="https://github.com/user-attachments/assets/e3187326-be73-476e-b082-66612d18f671" />
+
 
 
 
@@ -103,7 +105,8 @@ English • 简体中文 • 繁體中文 • 日本語 • 한국어 • Deutsc
 
 
 
-<img width="810" height="480" alt="August 22" src="https://github.com/user-attachments/assets/9f9bfbbc-408f-482d-b3b8-ccf4ff2b7acc" />
+<img width="820" height="460" alt="9月1日(2)" src="https://github.com/user-attachments/assets/d7a1b4f5-4ec7-47ed-a12d-1adde3c6c9af" />
+
 
 
 
